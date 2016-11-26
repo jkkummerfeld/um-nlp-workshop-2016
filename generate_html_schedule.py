@@ -9,7 +9,7 @@ increments = {
     'Dinner': ('Dinner', datetime.timedelta(minutes=60), ' class="success"'),
     'PhD talk': ('PhD talk', datetime.timedelta(minutes=11, seconds=0), ''),
     'Faculty talk': ('Faculty talk', datetime.timedelta(minutes=11, seconds=0), ''),
-    'Postdoc talk': ('Postdocoral talk', datetime.timedelta(minutes=11, seconds=0), ''),
+    'Postdoc talk': ('Postdoctoral talk', datetime.timedelta(minutes=11, seconds=0), ''),
     'Ugrad talk': ('Undergraduate talk', datetime.timedelta(minutes=2, seconds=30), ''),
     'MS talk': ('Masters talk', datetime.timedelta(minutes=2, seconds=30), ''),
 }
