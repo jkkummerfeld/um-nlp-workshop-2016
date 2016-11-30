@@ -5,6 +5,7 @@ import datetime
 
 increments = {
     'Welcome': ('Welcome', datetime.timedelta(minutes=10), ''),
+    'Photo': ('Group Photo', datetime.timedelta(minutes=4), ' class="warning"'),
     'Tea Break': ('Tea Break', datetime.timedelta(minutes=30), ' class="success"'),
     'Dinner': ('Dinner', datetime.timedelta(minutes=60), ' class="success"'),
     'PhD talk': ('PhD talk', datetime.timedelta(minutes=11, seconds=0), ''),
