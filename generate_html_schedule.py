@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import sys
+import csv
 import datetime
 
 increments = {
@@ -36,38 +37,55 @@ row = '''    <tr{}>
       <td style="white-space:pre-wrap ; word-wrap:break-word;">{}</td>
     </tr>'''
 
+
+hidden = '''<a href="#mycollapse{}" data-toggle="collapse">{}</a><div style="max-width:400px" id="mycollapse{}" class="collapse">
+{}</div>'''
+hidden_count = 0
+
 def print_set(cur):
+    global hidden_count
+
     if cur[0] is not None:
-        name, _, colour = increments[cur[0]]
-        event = '\n'.join(cur[1])
+        event_name, _, colour = increments[cur[0]]
+        event
+        speaker = '\n'.join([v[0] for v in cur[1]])
+        if 'talk' not in cur[0]:
+            speaker = ""
+        info = []
+        for name, title, abstract in cur[1]:
+            if len(abstract) == 0:
+                info.append(title)
+            else:
+                info.append(hidden.format(hidden_count, title, hidden_count, abstract))
+                hidden_count += 1
         if len(cur[1]) > 1:
-            name += "s"
+            event_name += "s"
         time = cur[2].strftime("%H:%M")
-        print(row.format(colour, time, name, event, ""))
+        print(row.format(colour, time, event_name, speaker, '\n'.join(info)))
 
 minute = datetime.timedelta(minutes=1)
 ctime = datetime.datetime(2016,12,2,13,10,00)
 cur = (None, [], ctime)
 print(start)
-for line in open("schedule.txt"):
-    done = False
-    for key in increments:
-        if line.strip().endswith(key) and not done:
-            if key != cur[0]:
-                print_set(cur)
-                # Increment ctime to the next 15 min point
-                while ctime.minute % 5 != 0:
-                    ctime += minute
-                cur = (key, [], ctime)
+with open('schedule.csv', newline='') as csvfile:
+    reader = csv.reader(csvfile, delimiter=',')
+    for data_row in reader:
+        key = data_row[1]
+        if key not in increments:
+            continue
+        if key != cur[0]:
+            print_set(cur)
+            # Increment ctime to the next 15 min point
+            while ctime.minute % 5 != 0:
+                ctime += minute
+            cur = (key, [], ctime)
 
-            _, delta, colour = increments[key]
-            event = line.strip()[:-len(key)].strip()
-            cur[1].append(event)
-
-            done = True
-            ctime += delta
-    if not done:
-        print("Missed: '{}'".format(line.strip()))
+        _, delta, colour = increments[key]
+        event = data_row[0]
+        title = data_row[5]
+        abstract = data_row[6]
+        cur[1].append((event, title, abstract))
+        ctime += delta
 print_set(cur)
 
 print(end)
