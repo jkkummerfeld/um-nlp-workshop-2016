@@ -48,11 +48,14 @@ def print_set(cur):
     if cur[0] is not None:
         event_name, _, colour = increments[cur[0]]
         event
-        speaker = '\n'.join([v[0] for v in cur[1]])
-        if 'talk' not in cur[0]:
-            speaker = ""
+        speakers = []
         info = []
-        for name, title, abstract in cur[1]:
+        for name, title, abstract, homepage in cur[1]:
+            if 'talk' in cur[0]:
+                if len(homepage) > 0:
+                    speakers.append('<a href="{}">{}</a>'.format(homepage, name))
+                else:
+                    speakers.append(name)
             if len(abstract) == 0:
                 info.append(title)
             else:
@@ -61,7 +64,7 @@ def print_set(cur):
         if len(cur[1]) > 1:
             event_name += "s"
         time = cur[2].strftime("%H:%M")
-        print(row.format(colour, time, event_name, speaker, '\n'.join(info)))
+        print(row.format(colour, time, event_name, '\n'.join(speakers), '\n'.join(info)))
 
 minute = datetime.timedelta(minutes=1)
 ctime = datetime.datetime(2016,12,2,13,10,00)
@@ -84,7 +87,8 @@ with open('schedule.csv', newline='') as csvfile:
         event = data_row[0]
         title = data_row[5]
         abstract = data_row[6]
-        cur[1].append((event, title, abstract))
+        homepage= data_row[7]
+        cur[1].append((event, title, abstract, homepage))
         ctime += delta
 print_set(cur)
 
